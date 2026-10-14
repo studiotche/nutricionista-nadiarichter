@@ -42,6 +42,23 @@ export const site = {
     description:
       "Acompanhamento individualizado para emagrecimento, hipertrofia e saúde intestinal, sem dietas extremas.",
   },
+  ebook: {
+    eyebrow: "E-book de receitas",
+    title: "Mais praticidade e sabor na sua rotina alimentar.",
+    titleHighlight: "praticidade e sabor",
+    paragraphs: [
+      "Receitas práticas para variar o cardápio e facilitar a alimentação no dia a dia.",
+      "Cada receita traz os valores de calorias e proteínas calculados, para ajudar você a fazer escolhas com mais informação.",
+    ],
+    benefits: [
+      "Receitas práticas para o dia a dia",
+      "Calorias e proteínas calculadas",
+      "Mais variedade para suas refeições",
+    ],
+    price: "29,90",
+    image: "/assets/images/ebook-receitas-nadia-richter-faber.webp",
+    purchaseUrl: "https://sun.eduzz.com/7977QDVV9E",
+  },
   about: {
     eyebrow: "Olá, eu sou a Nádia Richter!",
     title: "Mais de 12 anos transformando vidas pela nutrição clínica e esportiva",
