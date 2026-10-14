@@ -86,6 +86,9 @@ const jsonLd = {
 
 <BaseLayout>
   <Fragment slot="head">
+    <script is:inline>
+      document.documentElement.classList.add("hero-reveal-enabled");
+    </script>
     <link
       rel="preload"
       as="image"
@@ -230,6 +233,35 @@ const jsonLd = {
         </h1>
         <p class="hero-tagline">{site.hero.tagline}</p>
         <p class="lead">{site.hero.description}</p>
+        <ul class="hero-benefits" aria-label="Benefícios do acompanhamento">
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path d="M3 2v9a5 5 0 0 0 3.5 4.77V28a1.5 1.5 0 0 0 3 0V15.77A5 5 0 0 0 13 11V2M8 2v9" />
+              <path d="M23 18h-2a1 1 0 0 1-1-1V6a4 4 0 0 1 8 0v11a1 1 0 0 1-1 1h-1v10a1.5 1.5 0 0 1-3 0Z" />
+            </svg>
+            <span>Alimentação<br />na vida real</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <rect x="5" y="6" width="5" height="20" rx="1.5" />
+              <rect x="22" y="6" width="5" height="20" rx="1.5" />
+              <path d="M10 13h12v6H10M5 11H2v10h3M27 11h3v10h-3" />
+            </svg>
+            <span>Mais força<br />e definição</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path d="M17 2v3a4 4 0 0 1-4 4H9a4 4 0 0 0 0 8h14a4 4 0 0 0 0-8h-6M9 13h14M9 17a4 4 0 0 0 0 8h11a5 5 0 0 0-5 5M9 21h14" />
+            </svg>
+            <span>Intestino<br />saudável</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path d="M16 28 4.5 16.5a7.5 7.5 0 0 1 0-10.5 7.5 7.5 0 0 1 10.5 0l1 1 1-1a7.5 7.5 0 0 1 10.5 0 7.5 7.5 0 0 1 0 10.5Z" />
+            </svg>
+            <span>Energia e<br />autoconfiança</span>
+          </li>
+        </ul>
         <div class="hero-actions">
           <a class="button" href={whatsappUrl} target="_blank" rel="noreferrer"
             >Agendar minha consulta <span aria-hidden="true">↗</span></a
@@ -746,15 +778,24 @@ const jsonLd = {
 
   const heroCopy = document.querySelector<HTMLElement>(".hero-copy");
   const isDesktopHero = window.matchMedia("(min-width: 761px)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (heroCopy && isDesktopHero) {
+  if (heroCopy && isDesktopHero && !prefersReducedMotion) {
+    const revealDuration = 0.42;
+    const revealGap = 0.02;
+    const textOverlap = 0.18;
+    const benefitStagger = 0.04;
+    const actionStagger = 0.035;
     const heroEyebrow = heroCopy.querySelector<HTMLElement>(".eyebrow");
     const heroTitle = heroCopy.querySelector<HTMLElement>("h1");
     const heroTagline = heroCopy.querySelector<HTMLElement>(".hero-tagline");
     const heroLead = heroCopy.querySelector<HTMLElement>(".lead");
+    const heroBenefits = heroCopy.querySelectorAll<HTMLElement>(".hero-benefits > li");
     const heroActions = heroCopy.querySelector<HTMLElement>(".hero-actions");
     const heroLocation = heroCopy.querySelector<HTMLElement>(".location-note");
     const heroCard = document.querySelector<HTMLElement>(".floating-card");
+    heroCopy.style.setProperty("--hero-duration", `${revealDuration}s`);
+    heroCard?.style.setProperty("--hero-duration", `${revealDuration}s`);
 
     const splitHeroWords = (element: HTMLElement | null) => {
       if (!element) return [];
@@ -785,6 +826,7 @@ const jsonLd = {
       let line = 0;
       let wordInLine = 0;
       let previousTop: number | null = null;
+      let endDelay = startDelay;
 
       words.forEach((word) => {
         const currentTop = word.offsetTop;
@@ -792,43 +834,47 @@ const jsonLd = {
           line += 1;
           wordInLine = 0;
         }
-        word.style.setProperty(
-          "--hero-delay",
-          `${startDelay + line * 0.07 + wordInLine * 0.018}s`,
-        );
+        const delay = startDelay + line * 0.025 + wordInLine * 0.006;
+        word.style.setProperty("--hero-delay", `${delay}s`);
+        endDelay = Math.max(endDelay, delay + revealDuration);
         wordInLine += 1;
         previousTop = currentTop;
       });
 
-      return line + 1;
+      return endDelay;
     };
 
     const startHeroReveal = () => {
       const titleWords = splitHeroWords(heroTitle);
       const taglineWords = splitHeroWords(heroTagline);
       const leadWords = splitHeroWords(heroLead);
-      heroCopy.classList.add("hero-reveal-ready");
-      heroCard?.classList.add("hero-reveal-ready");
 
-      const eyebrowDelay = 0.05;
-      const titleDelay = 0.12;
-      const titleLines = scheduleHeroWords(titleWords, titleDelay);
-      const taglineDelay = titleDelay + titleLines * 0.07 + 0.24;
-      const taglineLines = scheduleHeroWords(taglineWords, taglineDelay);
-      const leadDelay = taglineDelay + taglineLines * 0.07 + 0.24;
-      const leadLines = scheduleHeroWords(leadWords, leadDelay);
-      const actionsDelay = leadDelay + leadLines * 0.07 + 0.24;
-      const locationDelay = actionsDelay + 0.3;
+      const eyebrowDelay = 0.015;
+      const titleDelay = 0.03;
+      const titleEnd = scheduleHeroWords(titleWords, titleDelay);
+      const taglineEnd = scheduleHeroWords(taglineWords, titleEnd - textOverlap + revealGap);
+      const leadEnd = scheduleHeroWords(leadWords, taglineEnd - textOverlap + revealGap);
+      const benefitsDelay = leadEnd + revealGap;
+      heroBenefits.forEach((item, index) => {
+        item.style.setProperty("--hero-delay", `${benefitsDelay + index * benefitStagger}s`);
+      });
+      const benefitsEnd = heroBenefits.length
+        ? benefitsDelay + (heroBenefits.length - 1) * benefitStagger + revealDuration
+        : leadEnd;
+      const actionsDelay = benefitsEnd + revealGap;
+      const locationDelay = actionsDelay + actionStagger + revealDuration + revealGap;
 
       heroEyebrow?.style.setProperty("--hero-delay", `${eyebrowDelay}s`);
       heroActions?.querySelectorAll<HTMLElement>(":scope > *").forEach((item, index) => {
         item.style.setProperty(
           "--hero-delay",
-          `${actionsDelay + index * 0.06}s`,
+          `${actionsDelay + index * actionStagger}s`,
         );
       });
       heroLocation?.style.setProperty("--hero-delay", `${locationDelay}s`);
       heroCard?.style.setProperty("--hero-delay", `${locationDelay}s`);
+      heroCopy.classList.add("hero-reveal-ready");
+      heroCard?.classList.add("hero-reveal-ready");
     };
 
     if (document.fonts?.ready) {
