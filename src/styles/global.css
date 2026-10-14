@@ -2046,6 +2046,10 @@ body.menu-open {
     position: static;
   }
 
+  .process-bg {
+    display: none;
+  }
+
   .process-grid {
     grid-template-columns: 1fr;
     gap: 40px;
