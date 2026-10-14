@@ -36,11 +36,11 @@ export const site = {
   },
   hero: {
     eyebrow: "Nutrição Clínica & Performance",
-    title: "Nutricionista clínica em Dois Irmãos, Nádia Richter",
-    titleHighlight: "Nádia Richter",
-    tagline: "Comer bem pode ser prático, saboroso e com resultados reais.",
+    title: "Nutricionista Clínica em Dois Irmãos, Nádia Richter Faber",
+    titleHighlight: "Nádia Richter Faber",
+    tagline: "Resultado real e sustentável, para a sua vida.",
     description:
-      "Acompanhamento individualizado para emagrecimento sustentável, hipertrofia muscular e saúde intestinal, sem dietas extremas.",
+      "Acompanhamento individualizado para emagrecimento, hipertrofia e saúde intestinal, sem dietas extremas.",
   },
   about: {
     eyebrow: "Olá, eu sou a Nádia Richter!",

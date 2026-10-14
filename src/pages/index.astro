@@ -90,17 +90,34 @@ const jsonLd = {
       rel="preload"
       as="image"
       href={asset(site.assets.hero)}
-      media="(min-width: 761px)"
+      media="(min-width: 981px)"
       fetchpriority="high"
     />
     <link
       rel="preload"
       as="image"
       href={asset(site.assets.heroMobile)}
-      media="(max-width: 760px)"
+      media="(max-width: 980px)"
     />
     <link rel="preload" as="image" href={asset(site.assets.logo)} />
     <link rel="preload" as="image" href={asset("/assets/images/whatsapp.webp")} />
+    <link
+      rel="preload"
+      as="font"
+      href={asset("/fonts/caveat-latin-500.woff2")}
+      type="font/woff2"
+      crossorigin
+    />
+    <style
+      is:inline
+      set:html={`@font-face {
+        font-family: "Caveat";
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url("${asset("/fonts/caveat-latin-500.woff2")}") format("woff2");
+      }`}
+    />
     <script
       is:inline
       type="application/ld+json"
@@ -174,7 +191,7 @@ const jsonLd = {
       <div class="hero-visual">
         <picture class="hero-bg">
           <source
-            media="(max-width: 760px)"
+            media="(max-width: 980px)"
             srcset={asset(site.assets.heroMobile)}
           />
           <img
@@ -185,6 +202,19 @@ const jsonLd = {
             fetchpriority="high"
           />
         </picture>
+        <p class="hero-handwritten">
+          <span>Comer bem</span>
+          <span>também é</span>
+          <span>viver bem</span>
+          <svg viewBox="0 0 180 20" fill="none" aria-hidden="true">
+            <path
+              d="M6 14C42 6 101 4 173 7M29 18C69 11 118 10 153 11"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </p>
         <div class="floating-card">
           <span class="floating-kicker">Cuidado individual</span><strong
             >Sem fórmulas prontas.</strong
@@ -273,15 +303,11 @@ const jsonLd = {
     </section>
 
     <section class="section process-section" id="metodo">
-      <img
+      <div
         class="process-bg"
-        src={asset(site.assets.processBg)}
-        alt=""
+        style={`background-image: url('${asset(site.assets.processBg)}'), url('${asset(site.assets.processBg)}');`}
         aria-hidden="true"
-        width="1737"
-        height="905"
-        loading="lazy"
-      />
+      ></div>
       <div class="container process-grid">
         <div class="process-intro">
           <p class="eyebrow">Abordagem integrada</p><h2>
